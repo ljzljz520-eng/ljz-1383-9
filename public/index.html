@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Groove Lab 街舞教练课 · 试听预约</title>
+<meta name="description" content="少儿/青少年/成人街舞课程：教练风格、场地、年龄分组与成果展示；在线预约试听，满员可候补。">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="#top">GROOVE<span>LAB</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navLinks" aria-label="打开菜单">☰ 菜单</button>
+    <nav class="nav-links" id="navLinks" aria-label="主导航">
+      <a href="#styles">舞风</a>
+      <a href="#coaches">教练</a>
+      <a href="#venues">场地</a>
+      <a href="#sessions">试听课程</a>
+      <a href="#achievements">学员成果</a>
+      <a href="#my-bookings">我的预约</a>
+      <a href="/admin.html">管理后台</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="motion-toggle" id="motionToggle" aria-pressed="true" title="开关动效（不影响任何信息阅读）">动效：开</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <!-- Hero：网页展示风格 -->
+  <section class="hero">
+    <div class="container">
+      <span class="kicker fade-up">BREAKING · POPPING · HIPHOP · LOCKING</span>
+      <h1 class="fade-up">让每个孩子（和大人）<br>在节拍里找到自己的风格</h1>
+      <p class="lead fade-up">Groove Lab 由资深街舞教练带课，按年龄分组、小班教学。
+        选择合适的试听场次即可在线占位；名额在<strong>点击确认的瞬间由后台原子核对</strong>，
+        卡片上的剩余数仅作提示——满员时自动候补递补或等待人工邀请。</p>
+      <div class="hero-actions fade-up">
+        <a class="btn btn-primary" href="#sessions">立即预约试听</a>
+        <a class="btn btn-ghost" href="#achievements">看学员成果</a>
+      </div>
+      <p class="muted-small" style="margin-top:14px">提示：本页所有关键信息（时间、地点、名额状态、授权说明）均以文字展示，不依赖动画或 JavaScript 渲染的部分也可被阅读；如系统开启“减少动态效果”，动效会自动关闭。</p>
+    </div>
+  </section>
+
+  <!-- 舞风 -->
+  <section class="section" id="styles">
+    <div class="container">
+      <div class="section-head"><h2>四种风格，总有一种是你的律动</h2><span class="muted">年龄分组：4–7 / 8–12 / 13+</span></div>
+      <div class="grid cols-4">
+        <article class="card style-card fade-up"><span class="glyph">B</span><h3>Breaking 地板舞</h3><p class="muted">Toprock、Footwork、Freeze；少儿从安全力量与保护动作起步。</p></article>
+        <article class="card style-card fade-up"><span class="glyph">P</span><h3>Popping 震感舞</h3><p class="muted">Pop、Wave、Boogaloo，练节奏控制与身体分离。</p></article>
+        <article class="card style-card fade-up"><span class="glyph">H</span><h3>HipHop 嘻哈</h3><p class="muted">Bounce、Groove、基础律动组合，零基础最友好。</p></article>
+        <article class="card style-card fade-up"><span class="glyph">L</span><h3>Locking 锁舞</h3><p class="muted">干净利落的 Lock 与指向动作，舞台表现力拉满。</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 教练 -->
+  <section class="section" id="coaches">
+    <div class="container">
+      <div class="section-head"><h2>教练团队</h2><span class="muted">数据由后台维护，含代课安排</span></div>
+      <div class="grid cols-3" id="coachGrid"><p class="muted">加载中…</p></div>
+    </div>
+  </section>
+
+  <!-- 场地 -->
+  <section class="section" id="venues">
+    <div class="container">
+      <div class="section-head"><h2>上课场地</h3><span class="muted">弹性地板 · 镜墙 · 专业音响</span></div>
+      <div class="grid cols-3" id="venueGrid"><p class="muted">加载中…</p></div>
+    </div>
+  </section>
+
+  <!-- 年龄分组 -->
+  <section class="section" id="ages">
+    <div class="container">
+      <div class="section-head"><h2>年龄分组</h2></div>
+      <div class="grid cols-3" id="ageGrid"><p class="muted">加载中…</p></div>
+    </div>
+  </section>
+
+  <!-- 试听课程 -->
+  <section class="section" id="sessions">
+    <div class="container">
+      <div class="section-head">
+        <h2>近期试听场次</h2>
+        <span class="muted">卡片剩余量仅供参考，确认时后台会再次核对全部资源</span>
+      </div>
+      <div class="filters" id="ageFilter"></div>
+      <div class="grid cols-2" id="sessionGrid"><p class="muted">加载中…</p></div>
+    </div>
+  </section>
+
+  <!-- 成果 -->
+  <section class="section" id="achievements">
+    <div class="container">
+      <div class="section-head">
+        <h2>学员成果墙</h2>
+        <span class="muted">每个少儿视频均已获得监护人独立授权；到期或撤销后立即无法播放与分享</span>
+      </div>
+      <div class="grid cols-3" id="videoGrid"><p class="muted">加载中…</p></div>
+    </div>
+  </section>
+
+  <!-- 我的预约 -->
+  <section class="section" id="my-bookings">
+    <div class="container">
+      <div class="section-head">
+        <h2>我的预约 / 待处理邀请</h2>
+        <span class="muted">输入报名时的学员编号查询</span>
+      </div>
+      <div class="card">
+        <div class="row">
+          <input id="myId" type="number" placeholder="学员 ID（报名成功后会显示）" aria-label="学员 ID">
+          <button class="btn btn-cyan" id="loadMine">查询我的预约</button>
+        </div>
+        <div id="mineList" style="margin-top:14px"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 预约弹层 -->
+<div class="modal-backdrop" id="bookModal" role="dialog" aria-modal="true" aria-labelledby="bookTitle">
+  <div class="modal">
+    <h3 id="bookTitle">预约试听</h3>
+    <div id="bookSessionInfo" class="muted-small"></div>
+    <label>学员姓名（少儿填孩子姓名）</label><input id="bkName" autocomplete="name">
+    <div class="row">
+      <div><label>年龄</label><input id="bkAge" type="number" min="3" max="99"></div>
+      <div><label>监护人手机 / 微信</label><input id="bkContact" autocomplete="tel"></div>
+    </div>
+    <p class="muted-small" style="margin-top:12px">
+      提交后后台会在一个事务内同时核对：班级容量、教练与场地可用性、以及同一学员的多场占位上限（最多 <b>2</b> 场）。
+      按钮在请求期间会锁定，避免重复点击；重复提交也会被幂等键拦截。
+    </p>
+    <div class="result" id="bookResult" role="status" aria-live="polite"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn btn-ghost" id="bookCancel">取消</button>
+      <button class="btn btn-primary" id="bookSubmit">确认预约</button>
+    </div>
+  </div>
+</div>
+
+<!-- 视频播放弹层 -->
+<div class="modal-backdrop" id="videoModal" role="dialog" aria-modal="true" aria-labelledby="vmTitle">
+  <div class="modal" style="width:min(720px,100%)">
+    <h3 id="vmTitle"></h3>
+    <div id="vmPlayer"></div>
+    <div class="clip-list" id="vmClips"></div>
+    <div class="consent-note" id="vmConsent"></div>
+    <div id="vmShare"></div>
+    <div class="row" style="margin-top:14px"><button class="btn btn-ghost" id="vmClose">关闭</button></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>Groove Lab 街舞工作室 · 演示站点。少儿影像严格按授权范围展示：授权到期自动下线，撤销会同时处理封面、片段与分享入口；已下载到外部的副本需联系持有人手动删除，本站不宣称可远程抹除。</p>
+    <p><a href="/admin.html">管理后台</a>（演示令牌：dev-admin-token）</p>
+  </div>
+</footer>
+
+<script src="/js/common.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

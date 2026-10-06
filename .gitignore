@@ -23,3 +23,9 @@ __pycache__/
 *.log
 .env
 .env.*
+
+# local sqlite + media
+data/
+*.db
+*.db-wal
+*.db-shm

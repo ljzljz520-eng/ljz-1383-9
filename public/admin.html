@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>管理后台 · Groove Lab</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav">
+  <a class="brand" href="/">GROOVE<span>LAB</span> 管理台</a>
+  <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navLinks">☰ 菜单</button>
+  <nav class="nav-links" id="navLinks">
+    <a href="/">返回前台</a>
+    <a href="/share.html">分享页</a>
+  </nav>
+  <div class="nav-tools"><button class="motion-toggle" id="motionToggle" aria-pressed="true">动效：开</button></div>
+</div></header>
+
+<main class="container admin-layout">
+  <nav class="admin-tabs" role="tablist" aria-label="管理功能">
+    <button class="admin-tab active" data-tab="overview">总览与实际容量</button>
+    <button class="admin-tab" data-tab="sessions">场次 / 换场代课</button>
+    <button class="admin-tab" data-tab="pending">待确认改期</button>
+    <button class="admin-tab" data-tab="waitlist">候补与邀请</button>
+    <button class="admin-tab" data-tab="videos">成果视频与撤下</button>
+    <button class="admin-tab" data-tab="resources">场地 / 教练 / 分组</button>
+    <button class="admin-tab" data-tab="audit">审计日志</button>
+  </nav>
+
+  <div>
+    <div class="token-bar">
+      <input id="adminToken" placeholder="管理令牌（默认 dev-admin-token）" aria-label="管理令牌">
+      <button class="btn btn-cyan small" id="saveToken">保存令牌</button>
+      <button class="btn btn-ghost small" id="refreshAll">刷新</button>
+    </div>
+    <p class="muted-small">令牌仅保存在本浏览器 localStorage；所有管理请求带 X-Admin-Token。</p>
+
+    <!-- 总览：解释实际容量 -->
+    <section class="admin-panel active" id="tab-overview">
+      <h2>总览：实际容量是多少？</h2>
+      <div class="notice cyan">
+        <strong>实际容量 = 班级 capacity 上限 − 已确认占位（booked + invited + pending_change）。</strong><br>
+        候补（waitlisted）<b>不占名额</b>；选课卡上的“剩余”只是读取瞬间的提示，两个用户同时点确认时，
+        以后台 <code>BEGIN IMMEDIATE</code> 事务内核对结果为准——不会出现超额。
+      </div>
+      <div class="kpi-row" id="kpis"></div>
+      <h3>各场次实际占位</h3>
+      <div id="overviewSessions"></div>
+    </section>
+
+    <!-- 场次 -->
+    <section class="admin-panel" id="tab-sessions">
+      <h2>场次管理（临时换场 / 教练代课 / 改期）</h2>
+      <div class="notice">
+        修改教练、场地或时间属于“安排变更”：已确认学员进入<strong>待确认改期</strong>（名额保留），
+        待接受的邀请会退回候补；所有冲突与容量都在事务内核验。容量不得低于既有确认占位数。
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <h3>新建试听场次</h3>
+        <div class="row">
+          <div><label>标题</label><input id="nsTitle" placeholder="如 Breaking 少儿体验课"></div>
+          <div><label>风格</label><input id="nsStyle" placeholder="Breaking"></div>
+        </div>
+        <div class="row">
+          <div><label>教练</label><select id="nsCoach"></select></div>
+          <div><label>场地</label><select id="nsVenue"></select></div>
+          <div><label>年龄分组</label><select id="nsAge"></select></div>
+        </div>
+        <div class="row">
+          <div><label>开始时间</label><input id="nsStart" type="datetime-local"></div>
+          <div><label>结束时间</label><input id="nsEnd" type="datetime-local"></div>
+        </div>
+        <div class="row">
+          <div><label>班级人数上限</label><input id="nsCap" type="number" value="6" min="1"></div>
+          <div><label>候补方式</label><select id="nsMode"><option value="auto">自动递补</option><option value="manual">人工邀请</option></select></div>
+        </div>
+        <button class="btn btn-primary small" id="nsCreate" style="margin-top:12px">创建场次</button>
+        <div class="result" id="nsResult"></div>
+      </div>
+      <div id="sessionAdminList"></div>
+    </section>
+
+    <!-- 待确认改期 -->
+    <section class="admin-panel" id="tab-pending">
+      <h2>待确认改期</h2>
+      <p class="muted">这些学员的名额仍被保留；他们确认时后台会再次核对容量/教练/场地。拒绝改期则释放名额（自动递补场次会立刻递补）。</p>
+      <div id="pendingList"></div>
+    </section>
+
+    <!-- 候补邀请 -->
+    <section class="admin-panel" id="tab-waitlist">
+      <h2>候补与邀请</h2>
+      <div class="notice">
+        <strong>自动递补：</strong>有人取消即自动把队首合格学员补为已确认。<br>
+        <strong>人工邀请：</strong>由你点“邀请”，邀请在 24 小时内有效并临时占位；可随时撤下邀请（退回候补，空位保留给其他人）。
+        学员超时未处理则邀请过期。
+      </div>
+      <div class="row" style="max-width:420px">
+        <button class="btn btn-ghost small" id="sweepInvites">立即清扫过期邀请</button>
+      </div>
+      <div id="waitlistView" style="margin-top:12px"></div>
+    </section>
+
+    <!-- 视频撤下 -->
+    <section class="admin-panel" id="tab-videos">
+      <h2>少儿成果视频：授权、转码与撤下进度</h2>
+      <div class="notice red">
+        <strong>撤销 ≠ 仅从列表隐藏。</strong>撤销会在一个事务内：① 视频置为 revoked 并停止公开访问；
+        ② 全部有效分享入口作废；③ 在途转码任务作废；④ 封面与片段标记移除；⑤ 物理删除服务端文件并记录完成时间。
+      </div>
+      <div class="notice">
+        <strong>已下载的外部副本无法远程抹除。</strong>系统只能关闭线上入口并删除服务端文件；
+        监护人需自行联系已下载/转发方删除，管理台对此如实说明，不做远程擦除承诺。
+      </div>
+      <div class="card" style="margin:12px 0">
+        <div class="row">
+          <input id="nvTitle" placeholder="新建视频条目标题（先建档→传源文件→授权）">
+          <button class="btn btn-cyan small" id="nvCreate" style="max-width:140px">新建视频条目</button>
+        </div>
+      </div>
+      <div id="videoAdminList"></div>
+    </section>
+
+    <!-- 基础资源 -->
+    <section class="admin-panel" id="tab-resources">
+      <h2>场地 / 教练 / 年龄分组</h2>
+      <div class="grid cols-3">
+        <div class="card"><h3>新建场地</h3>
+          <input id="nvName" placeholder="名称"><input id="nvAddr" placeholder="地址">
+          <input id="nvCap2" type="number" placeholder="容量" value="12">
+          <button class="btn btn-cyan small" id="createVenue" style="margin-top:8px">创建</button></div>
+        <div class="card"><h3>新建教练</h3>
+          <input id="ncName" placeholder="姓名"><input id="ncStyle" placeholder="风格">
+          <input id="ncBio" placeholder="简介">
+          <button class="btn btn-cyan small" id="createCoach" style="margin-top:8px">创建</button></div>
+        <div class="card"><h3>新建年龄分组</h3>
+          <div class="row"><input id="naName" placeholder="名称"><input id="naMin" type="number" placeholder="最小年龄" value="4"></div>
+          <div class="row"><input id="naMax" type="number" placeholder="最大年龄" value="12"></div>
+          <button class="btn btn-cyan small" id="createAge" style="margin-top:8px">创建</button></div>
+      </div>
+      <div id="resourceLists" style="margin-top:16px"></div>
+    </section>
+
+    <!-- 审计 -->
+    <section class="admin-panel" id="tab-audit">
+      <h2>审计日志（最近 200 条）</h2>
+      <button class="btn btn-ghost small" id="loadAudit">刷新日志</button>
+      <div id="auditList" style="margin-top:10px"></div>
+    </section>
+  </div>
+</main>
+
+<script src="/js/common.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>

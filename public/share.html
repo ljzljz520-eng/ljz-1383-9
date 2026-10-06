@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>成果分享 · Groove Lab</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav">
+  <a class="brand" href="/">GROOVE<span>LAB</span></a>
+  <nav class="nav-links" id="navLinks"><a href="/#achievements">返回成果墙</a></nav>
+  <div class="nav-tools"><button class="motion-toggle" id="motionToggle" aria-pressed="true">动效：开</button></div>
+</div></header>
+<main class="section"><div class="container" style="max-width:760px">
+  <h1 class="fade-up">学员成果分享</h1>
+  <p class="muted">该页面通过一次性分享入口访问。授权到期或被监护人撤销时，链接立即失效；已下载的副本请自行按监护人要求删除。</p>
+  <div class="card" id="entry">
+    <label for="token">粘贴分享 token（或直接使用 ?token= 链接）</label>
+    <div class="row" style="margin-top:6px">
+      <input id="token" placeholder="分享 token">
+      <button class="btn btn-cyan" id="go">打开</button>
+    </div>
+    <div class="result" id="msg" role="status" aria-live="polite"></div>
+  </div>
+  <div id="content"></div>
+</div></main>
+<script src="/js/common.js"></script>
+<script>
+const STATUS = { active: '有效', expired: '已到期', revoked: '已撤销', none: '未授权' };
+async function show(token) {
+  const msg = document.getElementById('msg');
+  const content = document.getElementById('content');
+  msg.className = 'result show info'; msg.textContent = '正在校验分享入口与授权状态…';
+  try {
+    const r = await api('/api/shares/' + encodeURIComponent(token));
+    msg.className = 'result'; msg.textContent = '';
+    const v = r.video;
+    content.innerHTML = `
+      <article class="card" style="margin-top:16px">
+        <h2>${esc(v.title)}</h2>
+        ${v.coverAssetId ? `<img class="player" src="/api/assets/${v.coverAssetId}" alt="封面">` : ''}
+        <div class="clip-list">
+          ${v.clipAssetIds.map((id) => `<a class="clip-thumb" href="/api/assets/${id}" target="_blank" rel="noopener"><img src="/api/assets/${id}" alt="片段"><span>已授权片段 ▶</span></a>`).join('')}
+        </div>
+        <div class="consent-note">
+          授权状态：${STATUS[v.consentStatus] || v.consentStatus} ·
+          ${v.consentExpiresAt ? '有效期至 ' + fmtTime(v.consentExpiresAt) : '长期有效（撤销即止）'}。<br>
+          监护人可随时撤销：届时封面、片段与本分享入口都会关闭。请不要在授权范围外转发；已保存到本地的文件本站无法远程删除。
+        </div>
+      </article>`;
+  } catch (e) {
+    content.innerHTML = '';
+    msg.className = 'result show err';
+    msg.textContent = `无法观看：${e.message}（HTTP ${e.status || ''}）`;
+  }
+}
+document.getElementById('go').addEventListener('click', () => {
+  const t = document.getElementById('token').value.trim();
+  if (t) { history.replaceState(null, '', location.pathname + '?token=' + encodeURIComponent(t)); show(t); }
+});
+document.getElementById('token').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('go').click(); });
+const q = new URLSearchParams(location.search).get('token');
+if (q) { document.getElementById('token').value = q; show(q); }
+</script>
+</body>
+</html>
