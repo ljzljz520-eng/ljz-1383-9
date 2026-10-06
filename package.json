@@ -1,0 +1,16 @@
+{
+  "name": "groove-street-dance",
+  "version": "1.0.0",
+  "description": "街舞教练课程站：展示 + 试听预约（教练/场地/年龄分组/候补/邀请/少儿视频授权撤下）",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "seed": "node server/seed.js",
+    "test": "node --test test/"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "sql.js": "^1.13.0"
+  }
+}

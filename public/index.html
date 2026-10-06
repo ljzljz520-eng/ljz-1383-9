@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEON GROOVE 街舞工作室 · 教练课程与试听预约</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#top" aria-label="NEON GROOVE 首页">
+      <span class="brand-mark" aria-hidden="true">◢◤</span> NEON&nbsp;GROOVE
+    </a>
+    <button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="siteNav" aria-label="打开导航菜单">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+    <nav id="siteNav" class="site-nav" aria-label="主导航">
+      <a href="#styles">舞种风格</a>
+      <a href="#coaches">教练团队</a>
+      <a href="#achievements">学员成果</a>
+      <a href="#trial">试听预约</a>
+      <a href="#invitations">我的邀请</a>
+      <a class="nav-admin" href="/admin">管理后台</a>
+      <button id="motionToggle" class="motion-toggle" type="button" aria-pressed="true" title="开关页面动效（不影响信息阅读）">动效：开</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<section id="top" class="hero">
+  <div class="container">
+    <p class="eyebrow">STREET DANCE STUDIO · SINCE 2014</p>
+    <h1 class="hero-title">把节拍踩在脚下，<br>把<em class="neon">态度</em>跳进身体里。</h1>
+    <p class="hero-sub">少儿启蒙到成人进阶，Hip-Hop / Breaking / Choreography 全覆盖。预约一节免费试听，教练、场地、年龄分组当场锁定。</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#trial">立即预约试听</a>
+      <a class="btn btn-ghost" href="#achievements">看看学员成果</a>
+    </div>
+    <ul class="hero-points">
+      <li>小班授课，实际容量 = min(班级人数, 场地容量)</li>
+      <li>满员可候补，有名额按顺位自动递补，也可由教练人工邀请</li>
+      <li>少儿视频须监护人独立授权，随时可撤销</li>
+    </ul>
+  </div>
+</section>
+
+<section id="styles" class="section">
+  <div class="container">
+    <h2 class="section-title">舞种风格</h2>
+    <div id="styleGrid" class="card-grid"><!-- JS 渲染 --></div>
+  </div>
+</section>
+
+<section id="coaches" class="section section-alt">
+  <div class="container">
+    <h2 class="section-title">教练团队</h2>
+    <div id="coachGrid" class="card-grid"><!-- JS 渲染 --></div>
+  </div>
+</section>
+
+<section id="achievements" class="section">
+  <div class="container">
+    <h2 class="section-title">学员成果</h2>
+    <p class="section-note">所有少儿影像均持有监护人<strong>独立授权</strong>；授权到期或被撤销后，视频、封面、片段与分享链接会同步撤下，而不仅仅是从列表隐藏。</p>
+    <div id="videoGrid" class="card-grid video-grid"><!-- JS 渲染 --></div>
+  </div>
+</section>
+
+<section id="trial" class="section section-alt">
+  <div class="container">
+    <h2 class="section-title">试听预约</h2>
+    <p class="section-note" id="classHint">卡片上的“剩余名额”仅为提示；点击确认时系统会原子核对教练、场地、班级版本、年龄分组与人数，最后一个名额以服务端确认结果为准。</p>
+    <div id="classGrid" class="card-grid class-grid"><!-- JS 渲染 --></div>
+  </div>
+</section>
+
+<section id="invitations" class="section">
+  <div class="container narrow">
+    <h2 class="section-title">我的候补邀请</h2>
+    <p class="section-note">人工/自动递补产生的邀请有有效期（默认 24 小时），逾期名额自动顺延。输入报名手机号查询。</p>
+    <form id="inviteQueryForm" class="form-row">
+      <label class="field grow">
+        <span>报名手机号</span>
+        <input type="tel" name="phone" required placeholder="如 13800000000" autocomplete="tel">
+      </label>
+      <button class="btn btn-primary" type="submit">查询邀请</button>
+    </form>
+    <div id="inviteList" class="invite-list" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- 报名弹窗 -->
+<div id="bookingModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+  <div class="modal-panel">
+    <button class="modal-close" type="button" aria-label="关闭" data-close>×</button>
+    <h3 id="modalTitle">预约试听</h3>
+    <p id="modalClassInfo" class="modal-class-info"></p>
+    <form id="bookingForm">
+      <input type="hidden" name="class_id">
+      <input type="hidden" name="expected_version">
+      <div class="field">
+        <label><span>学员姓名</span><input name="name" required autocomplete="name"></label>
+      </div>
+      <div class="field-row">
+        <label class="field"><span>年龄</span><input name="age" type="number" min="3" max="99" required></label>
+        <label class="field grow"><span>手机号</span><input name="phone" type="tel" required autocomplete="tel" placeholder="用于接收候补邀请"></label>
+      </div>
+      <label class="check"><input type="checkbox" name="join_waitlist"> 名额满时加入候补（按顺位递补或等待人工邀请）</label>
+      <p class="form-tip">同一学员最多保留 <strong id="spotLimitTip">2</strong> 场活跃占位（含尚未接受的邀请）。请勿重复点击，提交按钮会自动锁定并附带幂等键。</p>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" type="button" data-close>取消</button>
+        <button id="bookingSubmit" class="btn btn-primary" type="submit">确认锁定名额</button>
+      </div>
+      <div id="bookingResult" class="result-box" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>NEON GROOVE 街舞工作室 · 演示系统</p>
+    <p class="fineprint">本站少儿成果视频受监护人授权保护。授权撤下会处理封面、片段与分享入口；对于用户在撤下前已下载到本地的外部副本，平台<strong>无法也不会宣称可以远程抹除</strong>，请家长审慎授权。</p>
+  </div>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>

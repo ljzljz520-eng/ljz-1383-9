@@ -23,3 +23,7 @@ __pycache__/
 *.log
 .env
 .env.*
+
+# 本地持久数据库
+/data/*.db
+/data/*.db.tmp

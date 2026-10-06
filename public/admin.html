@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理后台 · NEON GROOVE</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body class="motion-off">
+<div id="loginMask" class="login-mask">
+  <form id="loginForm" class="login-card">
+    <h2 style="margin-top:0">管理后台登录</h2>
+    <p class="muted" style="font-size:.86rem">演示环境：默认令牌 <code>dev-admin-token</code>（环境变量 ADMIN_TOKEN 可覆盖）</p>
+    <label class="field"><span>管理员令牌</span><input type="password" name="token" required autofocus></label>
+    <button class="btn btn-primary" type="submit" style="width:100%">进入后台</button>
+  </form>
+</div>
+
+<div class="admin-layout">
+  <aside class="admin-side">
+    <h1>NEON GROOVE<br><small style="color:var(--muted)">排课与资源后台</small></h1>
+    <nav id="adminNav">
+      <button data-tab="overview" class="active">总览</button>
+      <button data-tab="classes">班级与预约</button>
+      <button data-tab="changes">改期/换场/代课</button>
+      <button data-tab="resources">场地·教练·分组</button>
+      <button data-tab="media">成果视频与授权</button>
+      <button data-tab="settings">规则设置</button>
+    </nav>
+    <p style="margin-top:24px"><a href="/">← 返回前台</a></p>
+  </aside>
+  <main class="admin-main" id="adminMain"><!-- JS 渲染 --></main>
+</div>
+<div id="toast" class="toast" hidden></div>
+<script src="/admin.js"></script>
+</body>
+</html>
